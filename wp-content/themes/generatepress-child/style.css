@@ -1,0 +1,537 @@
+/*
+Theme Name: GeneratePress Child
+Template: generatepress
+Version: 1.0.0
+Description: Premium SaaS-style child theme for Logic Weaver — a digital marketing / AI automation brand. Adds a transparent, modern header over the hero with refined typography, a centered navigation, and a gradient pill CTA.
+Author: Logic Weaver
+Text Domain: generatepress-child
+*/
+
+/* =========================================================
+   1. Brand tokens
+   ========================================================= */
+:root {
+    /* Brand palette — calm, futuristic, trustworthy */
+    --lw-bg-hero:        #0a0e1a;        /* deep navy reference for the hero */
+    --lw-fg:             #ffffff;
+    --lw-fg-muted:       rgba(255, 255, 255, 0.72);
+    --lw-fg-soft:        rgba(255, 255, 255, 0.55);
+    --lw-divider:        rgba(255, 255, 255, 0.10);
+
+    --lw-accent:         #7c5cff;        /* electric violet */
+    --lw-accent-2:       #4f7cff;        /* deep tech blue */
+    --lw-accent-3:       #22d3ee;        /* subtle cyan */
+
+    /* Gradient + glow used by the CTA */
+    --lw-cta-gradient:   linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #4f7cff 100%);
+    --lw-cta-gradient-h: linear-gradient(135deg, #7c7dff 0%, #9d6dff 50%, #6090ff 100%);
+    --lw-cta-shadow:     0 6px 18px rgba(99, 102, 241, 0.35),
+                         0 1px 0 rgba(255, 255, 255, 0.08) inset;
+    --lw-cta-shadow-h:   0 10px 28px rgba(124, 92, 255, 0.45),
+                         0 1px 0 rgba(255, 255, 255, 0.12) inset;
+
+    /* Layout */
+    --lw-header-h:       88px;
+    --lw-header-h-sm:    72px;
+    --lw-header-pad-x:   clamp(20px, 4vw, 56px);
+    --lw-header-z:       9000;
+    --lw-nav-gap:        38px;
+    --lw-nav-gap-md:     24px;
+
+    /* Type */
+    --lw-font:           "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --lw-nav-size:       14.5px;
+    --lw-nav-weight:     500;
+    --lw-nav-tracking:   0.005em;
+
+    /* Surface + motion */
+    --lw-radius-pill:    9999px;
+    --lw-radius-md:      14px;
+    --lw-ease:           cubic-bezier(0.22, 1, 0.36, 1);
+    --lw-focus-ring:     0 0 0 2px rgba(124, 92, 255, 0.55),
+                         0 0 0 4px rgba(34, 211, 238, 0.25);
+}
+
+/* =========================================================
+   2. Header — transparent, absolute over the hero
+   ========================================================= */
+.site-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: var(--lw-header-z);
+
+    background: transparent;
+    border-bottom: 1px solid transparent;
+
+    font-family: var(--lw-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove any GP default background image / colour bleed */
+.site-header,
+.site-header .inside-header {
+    background-color: transparent;
+}
+
+/* =========================================================
+   3. Inside-header — 3-zone layout: logo / centered nav / CTA
+   GP default ships .inside-header as a flex container; we
+   force a grid so the centered nav stays optically centered
+   regardless of logo width.
+   ========================================================= */
+.inside-header {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+
+    width: 100%;
+    max-width: 1280px;
+    min-height: var(--lw-header-h);
+    margin: 0 auto;
+    padding: 0 var(--lw-header-pad-x);
+}
+
+/* Site branding sits in column 1 */
+.site-branding,
+.site-logo {
+    grid-column: 1;
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.site-logo img {
+    display: block;
+    max-height: 32px;
+    width: auto;
+    height: auto;
+}
+
+.site-branding .main-title,
+.site-branding .main-title a {
+    color: var(--lw-fg);
+    font-family: var(--lw-font);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.site-branding .site-description {
+    color: var(--lw-fg-soft);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+}
+
+/* Main navigation sits in column 2 (visually centred) */
+.main-navigation {
+    grid-column: 2;
+    justify-self: center;
+    background: transparent;
+    min-height: auto;
+}
+
+.main-navigation .inside-navigation {
+    padding: 0;
+    background: transparent;
+}
+
+/* =========================================================
+   4. Navigation links
+   ========================================================= */
+.main-navigation ul {
+    display: flex;
+    align-items: center;
+    gap: var(--lw-nav-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: transparent;
+}
+
+.main-navigation .menu > li {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.main-navigation .main-nav ul li a,
+.main-navigation a,
+.main-navigation .menu > li > a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: auto;
+    padding: 10px 0;
+    line-height: 1;
+
+    color: var(--lw-fg-muted);
+    font-family: var(--lw-font);
+    font-size: var(--lw-nav-size);
+    font-weight: var(--lw-nav-weight);
+    letter-spacing: var(--lw-nav-tracking);
+    text-decoration: none;
+
+    background: transparent;
+    transition: color 180ms var(--lw-ease);
+}
+
+/* Underline-on-hover indicator — restrained, premium */
+.main-navigation .menu > li > a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    height: 1px;
+    background: linear-gradient(90deg,
+        rgba(124, 92, 255, 0) 0%,
+        rgba(124, 92, 255, 0.9) 50%,
+        rgba(34, 211, 238, 0) 100%);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 240ms var(--lw-ease);
+}
+
+.main-navigation .menu > li > a:hover,
+.main-navigation .menu > li > a:focus,
+.main-navigation .menu > li.current-menu-item > a {
+    color: var(--lw-fg);
+    background: transparent;
+}
+
+.main-navigation .menu > li > a:hover::after,
+.main-navigation .menu > li.current-menu-item > a::after {
+    transform: scaleX(1);
+}
+
+/* Suppress underline on the CTA item */
+.main-navigation .menu > li.menu-btn > a::after {
+    display: none;
+}
+
+/* Sub-menus (in case GP renders dropdowns) — keep readable on dark */
+.main-navigation ul ul {
+    background: rgba(10, 14, 26, 0.92);
+    border: 1px solid var(--lw-divider);
+    border-radius: var(--lw-radius-md);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    padding: 8px;
+    min-width: 220px;
+}
+
+.main-navigation ul ul li a {
+    color: var(--lw-fg-muted);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.main-navigation ul ul li a:hover {
+    color: var(--lw-fg);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* =========================================================
+   5. CTA — .menu-btn (last menu item, "Get Started")
+   Pulled to the visual right column via absolute positioning
+   so the centered nav stays optically clean.
+   ========================================================= */
+.main-navigation .menu > li.menu-btn {
+    position: absolute;
+    right: var(--lw-header-pad-x);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.main-navigation .menu > li.menu-btn > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    padding: 0 22px;
+
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+
+    background: var(--lw-cta-gradient);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--lw-radius-pill);
+    box-shadow: var(--lw-cta-shadow);
+
+    transition:
+        transform 220ms var(--lw-ease),
+        box-shadow 220ms var(--lw-ease),
+        background 220ms var(--lw-ease),
+        filter 220ms var(--lw-ease);
+}
+
+.main-navigation .menu > li.menu-btn > a:hover,
+.main-navigation .menu > li.menu-btn > a:focus {
+    color: #ffffff;
+    background: var(--lw-cta-gradient-h);
+    box-shadow: var(--lw-cta-shadow-h);
+    transform: translateY(calc(-50% - 1px));
+}
+
+/* The translate trick: the parent already uses translateY(-50%)
+   for vertical centring, so the lift hover compounds it. We
+   apply the lift on the link instead to keep things isolated. */
+.main-navigation .menu > li.menu-btn > a {
+    transform: translateY(0);
+}
+
+.main-navigation .menu > li.menu-btn > a:hover,
+.main-navigation .menu > li.menu-btn > a:focus {
+    transform: translateY(-2px);
+}
+
+.main-navigation .menu > li.menu-btn > a:active {
+    transform: translateY(0);
+    filter: brightness(0.97);
+}
+
+/* =========================================================
+   6. .menu-muted — optional softened item (e.g. Contact)
+   ========================================================= */
+.main-navigation .menu > li.menu-muted > a {
+    color: var(--lw-fg-soft);
+}
+
+.main-navigation .menu > li.menu-muted > a:hover,
+.main-navigation .menu > li.menu-muted > a:focus {
+    color: var(--lw-fg);
+}
+
+/* =========================================================
+   7. Hero offset — keep page content from hiding under the
+   absolute header. Targets the first content region only,
+   so interior pages stay safe.
+   ========================================================= */
+.site-content > .content-area > .site-main > article:first-child .entry-content > *:first-child,
+.site-content > .content-area > .site-main > .page:first-child,
+.site-content > .content-area > .site-main > .post:first-child {
+    /* Intentionally left untouched — hero sections handle their own padding. */
+}
+
+/* Default top padding on the main content wrapper so non-hero
+   pages do not slide under the absolute header. Hero pages can
+   opt out by adding the class .has-hero on <body>. */
+body:not(.has-hero) .site-content {
+    padding-top: var(--lw-header-h);
+}
+
+@media (max-width: 768px) {
+    body:not(.has-hero) .site-content {
+        padding-top: var(--lw-header-h-sm);
+    }
+}
+
+/* When a hero exists, give it breathing room at the top so the
+   first headline doesn't collide with the nav. Add `.lw-hero`
+   to the hero section in the page builder / block. */
+.lw-hero {
+    padding-top: calc(var(--lw-header-h) + 24px);
+}
+
+/* =========================================================
+   8. Responsive — tablet
+   ========================================================= */
+@media (max-width: 1100px) {
+    :root {
+        --lw-nav-gap: var(--lw-nav-gap-md);
+        --lw-header-pad-x: clamp(16px, 3vw, 32px);
+    }
+
+    .main-navigation .menu > li > a {
+        font-size: 14px;
+    }
+
+    .main-navigation .menu > li.menu-btn > a {
+        height: 38px;
+        padding: 0 18px;
+        font-size: 13.5px;
+    }
+
+    .main-navigation ul {
+        flex-wrap: nowrap;
+    }
+}
+
+/* =========================================================
+   9. Responsive — mobile (let GP's hamburger do its job)
+   ========================================================= */
+@media (max-width: 768px) {
+    :root {
+        --lw-header-h: var(--lw-header-h-sm);
+    }
+
+    /* Switch from 3-zone grid to a clean 2-column: logo | toggle */
+    .inside-header {
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        min-height: var(--lw-header-h-sm);
+        padding: 0 18px;
+    }
+
+    .site-branding,
+    .site-logo {
+        grid-column: 1;
+    }
+
+    /* GP's mobile nav lives inside .main-navigation — let it
+       collapse naturally, and stop forcing it into column 2. */
+    .main-navigation {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+    }
+
+    .main-navigation .menu-toggle {
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        transform: translateY(-50%);
+
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 0;
+        border-radius: 12px;
+
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--lw-fg);
+        font-size: 0;
+        cursor: pointer;
+
+        transition: background-color 160ms var(--lw-ease);
+    }
+
+    .main-navigation .menu-toggle:hover,
+    .main-navigation .menu-toggle:focus {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Ensure GP's icon stays visible */
+    .main-navigation .menu-toggle .gp-icon,
+    .main-navigation .menu-toggle svg {
+        fill: currentColor;
+        color: var(--lw-fg);
+    }
+
+    /* The expanded mobile menu — restyled as a frosted card */
+    .main-navigation .main-nav,
+    .main-navigation.toggled .main-nav {
+        background: rgba(10, 14, 26, 0.94);
+        border-top: 1px solid var(--lw-divider);
+        backdrop-filter: saturate(180%) blur(18px);
+        -webkit-backdrop-filter: saturate(180%) blur(18px);
+    }
+
+    .main-navigation .main-nav ul {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 8px 12px 16px;
+    }
+
+    .main-navigation .main-nav ul li {
+        width: 100%;
+    }
+
+    .main-navigation .main-nav ul li a {
+        display: block;
+        width: 100%;
+        padding: 14px 12px;
+        color: var(--lw-fg-muted);
+        font-size: 16px;
+        border-radius: 10px;
+    }
+
+    .main-navigation .main-nav ul li a:hover,
+    .main-navigation .main-nav ul li a:focus {
+        color: var(--lw-fg);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .main-navigation .main-nav ul li a::after {
+        display: none;
+    }
+
+    /* CTA returns to flow on mobile, full-width pill */
+    .main-navigation .menu > li.menu-btn {
+        position: static;
+        transform: none;
+        margin-top: 8px;
+        padding: 0 12px;
+    }
+
+    .main-navigation .menu > li.menu-btn > a {
+        width: 100%;
+        height: 48px;
+        font-size: 15px;
+    }
+
+    .main-navigation .menu > li.menu-btn > a:hover,
+    .main-navigation .menu > li.menu-btn > a:focus {
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   10. Accessibility — focus-visible
+   ========================================================= */
+.site-header a:focus-visible,
+.main-navigation .menu > li > a:focus-visible,
+.main-navigation .menu-toggle:focus-visible {
+    outline: none;
+    box-shadow: var(--lw-focus-ring);
+    border-radius: 8px;
+}
+
+.main-navigation .menu > li.menu-btn > a:focus-visible {
+    box-shadow: var(--lw-cta-shadow-h), var(--lw-focus-ring);
+    border-radius: var(--lw-radius-pill);
+}
+
+/* Skip link safety — GP includes one; keep it readable on dark */
+.screen-reader-text:focus,
+.skip-link:focus {
+    background: var(--lw-bg-hero);
+    color: var(--lw-fg);
+    border: 1px solid var(--lw-accent);
+    border-radius: 8px;
+    padding: 10px 14px;
+    z-index: calc(var(--lw-header-z) + 10);
+}
+
+/* =========================================================
+   11. Reduced motion
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+    .main-navigation .menu > li > a,
+    .main-navigation .menu > li > a::after,
+    .main-navigation .menu > li.menu-btn > a,
+    .main-navigation .menu-toggle {
+        transition: none;
+    }
+
+    .main-navigation .menu > li.menu-btn > a:hover,
+    .main-navigation .menu > li.menu-btn > a:focus {
+        transform: none;
+    }
+}
