@@ -1,75 +1,90 @@
 /* =========================================================
-   Header — frosted glass, minimal, 3-zone flex layout
+   Header — floating frosted-glass pill, 3-zone layout
    Reference: https://www.superlist.com/
    ========================================================= */
 
 :root {
-    --header-height: 64px;
-    --header-pad-x: 24px;
-    --header-radius: 14px;
-    --header-font-size: 14px;
+    --header-top: 12px;
+    --header-side: 16px;
+    --header-height: 56px;
+    --header-pad-x: 20px;
+    --header-radius: 9999px;
+    --header-max-width: 1100px;
+
+    --header-font-size: 13.5px;
     --header-font-weight: 500;
-    --header-gap: 28px;
+    --header-letter-spacing: -0.005em;
+    --header-gap: 4px;
 
-    --header-fg: #1a1a1a;
-    --header-fg-muted: #4a4a4a;
-    --header-bg-solid: rgba(255, 255, 255, 0.0);
-    --header-bg-frosted: rgba(255, 255, 255, 0.65);
-    --header-border: rgba(0, 0, 0, 0.06);
-    --header-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
-                     0 8px 24px rgba(0, 0, 0, 0.06);
+    --header-fg: #0e0e10;
+    --header-fg-muted: #5b5b63;
+    --header-fg-hover: #0e0e10;
 
-    --btn-bg: #111;
-    --btn-fg: #fff;
-    --btn-bg-hover: #000;
+    --header-bg: rgba(255, 255, 255, 0.55);
+    --header-bg-scrolled: rgba(255, 255, 255, 0.72);
+    --header-border: rgba(15, 15, 20, 0.06);
+    --header-shadow: 0 1px 1px rgba(15, 15, 20, 0.02),
+                     0 6px 24px rgba(15, 15, 20, 0.06),
+                     0 12px 48px rgba(15, 15, 20, 0.04);
+
+    --pill-hover-bg: rgba(15, 15, 20, 0.05);
+
+    --btn-bg: #0e0e10;
+    --btn-fg: #ffffff;
+    --btn-bg-hover: #1c1c20;
 
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    --font-stack: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                  Helvetica, Arial, sans-serif;
 }
 
 /* ---------------------------------------------------------
-   Header shell
+   Floating pill shell
    --------------------------------------------------------- */
 .site-header {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: var(--header-top);
+    left: var(--header-side);
+    right: var(--header-side);
     z-index: 1000;
 
+    margin: 0 auto;
+    max-width: var(--header-max-width);
     height: var(--header-height);
-    padding: 0 var(--header-pad-x);
 
-    background: var(--header-bg-solid);
-    border-bottom: 1px solid transparent;
+    border-radius: var(--header-radius);
+    border: 1px solid var(--header-border);
+    background: var(--header-bg);
+    box-shadow: var(--header-shadow);
+
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+
+    font-family: var(--font-stack);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
     transform: translate3d(0, 0, 0);
     transition:
-        transform 320ms var(--ease),
+        transform 360ms var(--ease),
         background-color 240ms var(--ease),
-        border-color 240ms var(--ease),
         box-shadow 240ms var(--ease),
-        backdrop-filter 240ms var(--ease);
-
+        border-color 240ms var(--ease);
     will-change: transform;
 }
 
-/* Frosted glass appears once the user has scrolled away from the top */
 .site-header--scrolled {
-    background: var(--header-bg-frosted);
-    border-bottom-color: var(--header-border);
-    box-shadow: var(--header-shadow);
-    backdrop-filter: saturate(180%) blur(18px);
-    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    background: var(--header-bg-scrolled);
 }
 
-/* Hidden state — slides up out of view when scrolling down */
 .site-header--hidden {
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, calc(-100% - var(--header-top) - 8px), 0);
 }
 
 /* ---------------------------------------------------------
-   3-zone flex layout (force 3 columns)
-   [ LOGO ]      [ centered nav ]      [ actions ]
+   3-zone layout: [logo] [centered nav] [actions]
    --------------------------------------------------------- */
 .site-header__inner {
     display: grid;
@@ -77,11 +92,11 @@
     align-items: center;
     height: 100%;
     width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    gap: var(--header-gap);
+    padding: 0 var(--header-pad-x) 0 calc(var(--header-pad-x) + 4px);
+    gap: 24px;
 }
 
+/* Logo */
 .site-header__logo {
     justify-self: start;
     display: inline-flex;
@@ -89,21 +104,22 @@
     gap: 8px;
 
     color: var(--header-fg);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
     text-decoration: none;
+    line-height: 1;
 }
 
 .site-header__logo img,
 .site-header__logo svg {
-    height: 24px;
+    height: 22px;
     width: auto;
     display: block;
 }
 
 /* ---------------------------------------------------------
-   Centered nav
+   Centered nav — pill-style hover
    --------------------------------------------------------- */
 .site-header__nav {
     justify-self: center;
@@ -119,61 +135,85 @@
 }
 
 .site-header__nav-link {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 9999px;
+
     color: var(--header-fg-muted);
     font-size: var(--header-font-size);
     font-weight: var(--header-font-weight);
+    letter-spacing: var(--header-letter-spacing);
     line-height: 1;
     text-decoration: none;
-    padding: 8px 4px;
-    transition: color 160ms var(--ease);
+    white-space: nowrap;
+
+    transition: background-color 160ms var(--ease), color 160ms var(--ease);
 }
 
 .site-header__nav-link:hover,
+.site-header__nav-link:focus-visible {
+    color: var(--header-fg-hover);
+    background: var(--pill-hover-bg);
+    outline: none;
+}
+
 .site-header__nav-link[aria-current="page"] {
-    color: var(--header-fg);
+    color: var(--header-fg-hover);
 }
 
 /* ---------------------------------------------------------
-   Right-side actions: [ Sign in | Button ]
+   Right-side actions
    --------------------------------------------------------- */
 .site-header__actions {
     justify-self: end;
     display: inline-flex;
     align-items: center;
-    gap: 16px;
+    gap: 6px;
 }
 
 .site-header__signin {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 9999px;
+
     color: var(--header-fg);
     font-size: var(--header-font-size);
     font-weight: var(--header-font-weight);
+    letter-spacing: var(--header-letter-spacing);
     text-decoration: none;
-    padding: 8px 4px;
-    transition: opacity 160ms var(--ease);
+    line-height: 1;
+
+    transition: background-color 160ms var(--ease);
 }
 
 .site-header__signin:hover {
-    opacity: 0.7;
+    background: var(--pill-hover-bg);
 }
 
 .site-header__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 36px;
+    height: 34px;
     padding: 0 16px;
     border: 0;
-    border-radius: 999px;
+    border-radius: 9999px;
 
     background: var(--btn-bg);
     color: var(--btn-fg);
+    font-family: inherit;
     font-size: var(--header-font-size);
     font-weight: 600;
+    letter-spacing: var(--header-letter-spacing);
     line-height: 1;
-    letter-spacing: -0.005em;
-
-    cursor: pointer;
+    white-space: nowrap;
     text-decoration: none;
+    cursor: pointer;
+
     transition: background-color 160ms var(--ease), transform 160ms var(--ease);
 }
 
@@ -182,11 +222,11 @@
 }
 
 .site-header__cta:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
 /* ---------------------------------------------------------
-   Mobile menu trigger (hamburger)
+   Mobile menu trigger
    --------------------------------------------------------- */
 .site-header__toggle {
     display: none;
@@ -195,10 +235,15 @@
     height: 40px;
     border: 0;
     background: transparent;
-    border-radius: 10px;
+    border-radius: 9999px;
     cursor: pointer;
     padding: 0;
     color: var(--header-fg);
+    transition: background-color 160ms var(--ease);
+}
+
+.site-header__toggle:hover {
+    background: var(--pill-hover-bg);
 }
 
 .site-header__toggle-bars,
@@ -206,7 +251,7 @@
 .site-header__toggle-bars::after {
     content: "";
     display: block;
-    width: 20px;
+    width: 18px;
     height: 1.5px;
     background: currentColor;
     border-radius: 2px;
@@ -220,30 +265,29 @@
 
 .site-header__toggle-bars::before {
     position: absolute;
-    top: -6px;
+    top: -5px;
     left: 0;
     right: 0;
 }
 
 .site-header__toggle-bars::after {
     position: absolute;
-    top: 6px;
+    top: 5px;
     left: 0;
     right: 0;
 }
 
-/* Open state — bars become an X */
 .site-header[data-menu-open="true"] .site-header__toggle-bars {
     transform: rotate(45deg);
 }
 
 .site-header[data-menu-open="true"] .site-header__toggle-bars::before {
-    transform: translateY(6px) rotate(-90deg);
+    transform: translateY(5px) rotate(-90deg);
     opacity: 0;
 }
 
 .site-header[data-menu-open="true"] .site-header__toggle-bars::after {
-    transform: translateY(-6px) rotate(-90deg);
+    transform: translateY(-5px) rotate(-90deg);
 }
 
 /* ---------------------------------------------------------
@@ -251,32 +295,33 @@
    --------------------------------------------------------- */
 .site-header__mobile {
     position: fixed;
-    top: var(--header-height);
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: calc(var(--header-top) + var(--header-height) + 8px);
+    left: var(--header-side);
+    right: var(--header-side);
     z-index: 999;
 
-    display: flex;
-    flex-direction: column;
-    padding: 24px var(--header-pad-x) 32px;
+    padding: 14px;
+    border-radius: 22px;
+    border: 1px solid var(--header-border);
+    background: var(--header-bg-scrolled);
+    box-shadow: var(--header-shadow);
 
-    background: var(--header-bg-frosted);
     backdrop-filter: saturate(180%) blur(22px);
     -webkit-backdrop-filter: saturate(180%) blur(22px);
 
     opacity: 0;
     pointer-events: none;
-    transform: translateY(-8px);
+    transform: translateY(-6px) scale(0.99);
+    transform-origin: top center;
     transition:
         opacity 220ms var(--ease),
-        transform 220ms var(--ease);
+        transform 260ms var(--ease);
 }
 
 .site-header[data-menu-open="true"] .site-header__mobile {
     opacity: 1;
     pointer-events: auto;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 .site-header__mobile-list {
@@ -285,54 +330,65 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .site-header__mobile-link {
     display: block;
-    padding: 14px 4px;
+    padding: 12px 14px;
+    border-radius: 12px;
+
     color: var(--header-fg);
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 500;
+    letter-spacing: -0.005em;
     text-decoration: none;
-    border-bottom: 1px solid var(--header-border);
+
+    transition: background-color 160ms var(--ease);
+}
+
+.site-header__mobile-link:hover {
+    background: var(--pill-hover-bg);
 }
 
 .site-header__mobile-actions {
-    margin-top: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding-top: 24px;
-}
-
-.site-header__mobile-actions .site-header__cta {
-    width: 100%;
-    height: 48px;
-    font-size: 15px;
+    gap: 8px;
+    padding-top: 12px;
+    margin-top: 12px;
+    border-top: 1px solid var(--header-border);
 }
 
 .site-header__mobile-actions .site-header__signin {
-    text-align: center;
-    padding: 14px;
+    height: 44px;
+    justify-content: center;
+    background: transparent;
 }
 
-/* Lock body scroll when menu is open (apply this class to <body> via JS) */
+.site-header__mobile-actions .site-header__cta {
+    height: 44px;
+    width: 100%;
+}
+
 .body--menu-open {
     overflow: hidden;
 }
 
 /* ---------------------------------------------------------
-   Responsive — collapse to mobile menu under 768px
+   Responsive
    --------------------------------------------------------- */
 @media (max-width: 768px) {
     :root {
-        --header-pad-x: 16px;
-        --header-height: 56px;
+        --header-pad-x: 8px;
+        --header-height: 52px;
+        --header-side: 12px;
+        --header-top: 10px;
     }
 
     .site-header__inner {
         grid-template-columns: 1fr auto;
+        padding: 0 8px 0 16px;
     }
 
     .site-header__nav,
@@ -360,7 +416,9 @@
     .site-header,
     .site-header__mobile,
     .site-header__nav-link,
+    .site-header__signin,
     .site-header__cta,
+    .site-header__toggle,
     .site-header__toggle-bars,
     .site-header__toggle-bars::before,
     .site-header__toggle-bars::after {
@@ -369,16 +427,24 @@
 }
 
 /* ---------------------------------------------------------
-   Dark scheme variant
+   Dark scheme
    --------------------------------------------------------- */
 @media (prefers-color-scheme: dark) {
     :root {
-        --header-fg: #f5f5f5;
-        --header-fg-muted: #a8a8a8;
-        --header-bg-frosted: rgba(20, 20, 22, 0.6);
+        --header-fg: #f4f4f5;
+        --header-fg-muted: #a1a1aa;
+        --header-fg-hover: #ffffff;
+
+        --header-bg: rgba(20, 20, 22, 0.55);
+        --header-bg-scrolled: rgba(20, 20, 22, 0.72);
         --header-border: rgba(255, 255, 255, 0.08);
-        --btn-bg: #fff;
-        --btn-fg: #111;
-        --btn-bg-hover: #e8e8e8;
+        --header-shadow: 0 1px 1px rgba(0, 0, 0, 0.3),
+                         0 8px 24px rgba(0, 0, 0, 0.35);
+
+        --pill-hover-bg: rgba(255, 255, 255, 0.08);
+
+        --btn-bg: #ffffff;
+        --btn-fg: #0e0e10;
+        --btn-bg-hover: #e9e9eb;
     }
 }
