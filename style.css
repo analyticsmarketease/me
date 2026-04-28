@@ -1,0 +1,384 @@
+/* =========================================================
+   Header — frosted glass, minimal, 3-zone flex layout
+   Reference: https://www.superlist.com/
+   ========================================================= */
+
+:root {
+    --header-height: 64px;
+    --header-pad-x: 24px;
+    --header-radius: 14px;
+    --header-font-size: 14px;
+    --header-font-weight: 500;
+    --header-gap: 28px;
+
+    --header-fg: #1a1a1a;
+    --header-fg-muted: #4a4a4a;
+    --header-bg-solid: rgba(255, 255, 255, 0.0);
+    --header-bg-frosted: rgba(255, 255, 255, 0.65);
+    --header-border: rgba(0, 0, 0, 0.06);
+    --header-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
+                     0 8px 24px rgba(0, 0, 0, 0.06);
+
+    --btn-bg: #111;
+    --btn-fg: #fff;
+    --btn-bg-hover: #000;
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------------------------------
+   Header shell
+   --------------------------------------------------------- */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    height: var(--header-height);
+    padding: 0 var(--header-pad-x);
+
+    background: var(--header-bg-solid);
+    border-bottom: 1px solid transparent;
+
+    transform: translate3d(0, 0, 0);
+    transition:
+        transform 320ms var(--ease),
+        background-color 240ms var(--ease),
+        border-color 240ms var(--ease),
+        box-shadow 240ms var(--ease),
+        backdrop-filter 240ms var(--ease);
+
+    will-change: transform;
+}
+
+/* Frosted glass appears once the user has scrolled away from the top */
+.site-header--scrolled {
+    background: var(--header-bg-frosted);
+    border-bottom-color: var(--header-border);
+    box-shadow: var(--header-shadow);
+    backdrop-filter: saturate(180%) blur(18px);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+}
+
+/* Hidden state — slides up out of view when scrolling down */
+.site-header--hidden {
+    transform: translate3d(0, -100%, 0);
+}
+
+/* ---------------------------------------------------------
+   3-zone flex layout (force 3 columns)
+   [ LOGO ]      [ centered nav ]      [ actions ]
+   --------------------------------------------------------- */
+.site-header__inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    gap: var(--header-gap);
+}
+
+.site-header__logo {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--header-fg);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+}
+
+.site-header__logo img,
+.site-header__logo svg {
+    height: 24px;
+    width: auto;
+    display: block;
+}
+
+/* ---------------------------------------------------------
+   Centered nav
+   --------------------------------------------------------- */
+.site-header__nav {
+    justify-self: center;
+}
+
+.site-header__nav-list {
+    display: flex;
+    align-items: center;
+    gap: var(--header-gap);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.site-header__nav-link {
+    color: var(--header-fg-muted);
+    font-size: var(--header-font-size);
+    font-weight: var(--header-font-weight);
+    line-height: 1;
+    text-decoration: none;
+    padding: 8px 4px;
+    transition: color 160ms var(--ease);
+}
+
+.site-header__nav-link:hover,
+.site-header__nav-link[aria-current="page"] {
+    color: var(--header-fg);
+}
+
+/* ---------------------------------------------------------
+   Right-side actions: [ Sign in | Button ]
+   --------------------------------------------------------- */
+.site-header__actions {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.site-header__signin {
+    color: var(--header-fg);
+    font-size: var(--header-font-size);
+    font-weight: var(--header-font-weight);
+    text-decoration: none;
+    padding: 8px 4px;
+    transition: opacity 160ms var(--ease);
+}
+
+.site-header__signin:hover {
+    opacity: 0.7;
+}
+
+.site-header__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 999px;
+
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    font-size: var(--header-font-size);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.005em;
+
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 160ms var(--ease), transform 160ms var(--ease);
+}
+
+.site-header__cta:hover {
+    background: var(--btn-bg-hover);
+}
+
+.site-header__cta:active {
+    transform: scale(0.98);
+}
+
+/* ---------------------------------------------------------
+   Mobile menu trigger (hamburger)
+   --------------------------------------------------------- */
+.site-header__toggle {
+    display: none;
+    justify-self: end;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 0;
+    color: var(--header-fg);
+}
+
+.site-header__toggle-bars,
+.site-header__toggle-bars::before,
+.site-header__toggle-bars::after {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background: currentColor;
+    border-radius: 2px;
+    margin: 0 auto;
+    transition: transform 220ms var(--ease), opacity 160ms var(--ease);
+}
+
+.site-header__toggle-bars {
+    position: relative;
+}
+
+.site-header__toggle-bars::before {
+    position: absolute;
+    top: -6px;
+    left: 0;
+    right: 0;
+}
+
+.site-header__toggle-bars::after {
+    position: absolute;
+    top: 6px;
+    left: 0;
+    right: 0;
+}
+
+/* Open state — bars become an X */
+.site-header[data-menu-open="true"] .site-header__toggle-bars {
+    transform: rotate(45deg);
+}
+
+.site-header[data-menu-open="true"] .site-header__toggle-bars::before {
+    transform: translateY(6px) rotate(-90deg);
+    opacity: 0;
+}
+
+.site-header[data-menu-open="true"] .site-header__toggle-bars::after {
+    transform: translateY(-6px) rotate(-90deg);
+}
+
+/* ---------------------------------------------------------
+   Mobile menu panel
+   --------------------------------------------------------- */
+.site-header__mobile {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+
+    display: flex;
+    flex-direction: column;
+    padding: 24px var(--header-pad-x) 32px;
+
+    background: var(--header-bg-frosted);
+    backdrop-filter: saturate(180%) blur(22px);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition:
+        opacity 220ms var(--ease),
+        transform 220ms var(--ease);
+}
+
+.site-header[data-menu-open="true"] .site-header__mobile {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.site-header__mobile-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.site-header__mobile-link {
+    display: block;
+    padding: 14px 4px;
+    color: var(--header-fg);
+    font-size: 18px;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid var(--header-border);
+}
+
+.site-header__mobile-actions {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 24px;
+}
+
+.site-header__mobile-actions .site-header__cta {
+    width: 100%;
+    height: 48px;
+    font-size: 15px;
+}
+
+.site-header__mobile-actions .site-header__signin {
+    text-align: center;
+    padding: 14px;
+}
+
+/* Lock body scroll when menu is open (apply this class to <body> via JS) */
+.body--menu-open {
+    overflow: hidden;
+}
+
+/* ---------------------------------------------------------
+   Responsive — collapse to mobile menu under 768px
+   --------------------------------------------------------- */
+@media (max-width: 768px) {
+    :root {
+        --header-pad-x: 16px;
+        --header-height: 56px;
+    }
+
+    .site-header__inner {
+        grid-template-columns: 1fr auto;
+    }
+
+    .site-header__nav,
+    .site-header__actions {
+        display: none;
+    }
+
+    .site-header__toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 769px) {
+    .site-header__mobile {
+        display: none;
+    }
+}
+
+/* ---------------------------------------------------------
+   Reduced motion
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .site-header__mobile,
+    .site-header__nav-link,
+    .site-header__cta,
+    .site-header__toggle-bars,
+    .site-header__toggle-bars::before,
+    .site-header__toggle-bars::after {
+        transition: none;
+    }
+}
+
+/* ---------------------------------------------------------
+   Dark scheme variant
+   --------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --header-fg: #f5f5f5;
+        --header-fg-muted: #a8a8a8;
+        --header-bg-frosted: rgba(20, 20, 22, 0.6);
+        --header-border: rgba(255, 255, 255, 0.08);
+        --btn-bg: #fff;
+        --btn-fg: #111;
+        --btn-bg-hover: #e8e8e8;
+    }
+}
